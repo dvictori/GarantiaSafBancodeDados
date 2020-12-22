@@ -116,4 +116,3 @@ select id_sistema, nome_pop, nome_cientifico, funcao_planta
 	natural join nome_popular
 	group by id_sistema, nome_cientifico, funcao_planta
 	having min(nome_popular.ROWID)
-
