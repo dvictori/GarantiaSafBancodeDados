@@ -1,4 +1,5 @@
 # Garantia Safra Banco de Dados
- 
-Repositório criado para versionar o banco de dados do proj GS
-teste alterando diretamente no site
+
+Repositório para armazenar o código que cria o banco de dados do projeto GS
+
+Banco irá armazenar opções de práticas agrícolas adequadas para o nordeste brasileiro.
