@@ -1,9 +1,30 @@
-CREATE TABLE ctrl_biologico_pragas (
-  id_ctrl_biologico INTEGER PRIMARY KEY NOT NULL,
-  id_praga_cien INTEGER,
-  insumo_ctrl_bio TEXT,
-  descricao_crtl_bio TEXT,
-  FOREIGN KEY(id_praga_cien) REFERENCES pragas(id_praga_cien) ON DELETE NO ACTION
+-- tabela dos sistemas
+CREATE TABLE sistema (
+  id_sistema INTEGER PRIMARY KEY NOT NULL,
+  descricao TEXT,
+  complexidade TEXT,
+  referencias TEXT,
+  cartilha TEXT
+);
+
+CREATE TABLE sistema_midia (
+  id_midia INTEGER PRIMARY KEY NOT NULL,
+  id_sistema INTEGER,
+  tipo INTEGER,
+  arquivo TEXT,
+  FOREIGN key(id_sistema) REFERENCES sistema(id_sistema)
+);
+
+-- quais espécies vegetais entram em cada sistema
+CREATE TABLE sistema_especie (
+  id_sistema_especie INTEGER PRIMARY KEY NOT NULL,
+  id_sistema INTEGER,
+  id_especie INTEGER,
+  funcao_especie TEXT,
+  espacamento_entreplantas TEXT,
+  espacamento_entrelinhas TEXT,
+  FOREIGN KEY("id_especie") REFERENCES "especie_vegetal"("id_especie") ON DELETE NO ACTION,
+  FOREIGN KEY("id_sistema") REFERENCES "sistema"("id_sistema") ON DELETE NO ACTION
 );
 
 CREATE TABLE especie_vegetal (
@@ -24,97 +45,157 @@ CREATE TABLE nome_popular (
   FOREIGN KEY(id_especie) REFERENCES especie_vegetal(id_especie) ON DELETE NO ACTION
 );
 
-CREATE TABLE pragas (
-  id_praga_cien INTEGER PRIMARY KEY NOT NULL,
+-- pragas que atacam as especies
+CREATE TABLE praga (
+  id_praga INTEGER PRIMARY KEY NOT NULL,
   id_planta INTEGER,
   praga_cientifico TEXT,
   descricao_praga TEXT,
   descricao_sintoma TEXT,
+  foto TEXT, -- será que não é possível ter só uma tabela de midia
   FOREIGN KEY(id_planta) REFERENCES especie_vegetal
 );
 
-CREATE TABLE pragas_pop (
+CREATE TABLE praga_pop (
   id_praga_pop INTEGER PRIMARY KEY NOT NULL,
-  id_praga_cien INTEGER,
+  id_praga INTEGER,
   praga_pop TEXT,
-  FOREIGN KEY(id_praga_cien) REFERENCES pragas(id_praga_cien) ON DELETE NO ACTION
+  FOREIGN KEY(id_praga) REFERENCES praga(id_praga) ON DELETE NO ACTION
 );
 
-CREATE TABLE sistema (
-  id_sistema INTEGER PRIMARY KEY NOT NULL,
-  nome TEXT,
-  descricao TEXT,
-  complexidade TEXT,
-  referencias TEXT,
-  cartilha TEXT
+CREATE TABLE controle_praga (
+  id_ctrl_biologico INTEGER PRIMARY KEY NOT NULL,
+  id_praga INTEGER,
+  insumo_ctrl TEXT,
+  descricao_crtl TEXT,
+  biologico INTEGER, -- bolean?
+  FOREIGN KEY(id_praga) REFERENCES praga(id_praga) ON DELETE NO ACTION
 );
 
-CREATE TABLE sistema_especie (
-  id_sistema_especie INTEGER PRIMARY KEY NOT NULL,
+-- sistema pode ter animais
+CREATE TABLE sistema_animal (
+  id_sistema_animal INTEGER PRIMARY KEY NOT NULL,
   id_sistema INTEGER,
-  id_especie INTEGER,
-  funcao_planta TEXT,
-  espacamento_entreplantas TEXT,
-  espacamento_entrelinhas TEXT,
-  FOREIGN KEY("id_especie") REFERENCES "especie_vegetal"("id_especie") ON DELETE NO ACTION,
-  FOREIGN KEY("id_sistema") REFERENCES "sistema"("id_sistema") ON DELETE NO ACTION
+  id_animal INTEGER,
+  funcao_animal,
+  ciclo,
+  FOREIGN KEY(id_sistema) REFERENCES sistema(id_sistema),
+  FOREIGN KEY(id_animal) REFERENCES animal(id_animal)
 );
 
+-- não sei se precisa detalhar nome cientifico
+CREATE TABLE animal (
+  id_animal INTEGER PRIMARY KEY NOT NULL,
+  nome TEXT,
+  raca TEXT,
+  exigencia_alimentacao TEXT
+);
 
+CREATE TABLE patogeno (
+  id_patogeno INTEGER PRIMARY KEY NOT NULL,
+  id_animal INTEGER,
+  nome_cientifico TEXT,
+  descricao TEXT,
+  sintoma TEXT,
+  foto TEXT,
+  FOREIGN KEY(id_animal) REFERENCES animal(id_animal)
+);
 
-INSERT INTO [especie_vegetal] ([id_especie],[nome_cientifico],[estrato], [exigencia_fert], [ciclo], [alimento_humano], [medicinal],[bioma_caract])
-VALUES
-(1, 'Zea Mays', 'alto', 'media/alta', 'semestral', 'sim', 'nao', 'indet'),
-(2, 'Cajanus cajon', 'alto', 'media', 'bianual', 'sim', 'sim', 'cerrado/caatinga'),
-(3, 'Crotalaria sp', 'emergente', 'media', 'anual', 'nao', 'sim', 'cerrado/caatinga'),
-(4, 'Gliricidia Sepium', 'alto', 'alta', 'perene', 'nao', 'sim', 'cerrado/caatinga');
+CREATE TABLE patogeno_pop (
+  id_patogeno_pop INTEGER PRIMARY KEY NOT NULL,
+  id_patogeno INTEGER,
+  nome_popular TEXT,
+  FOREIGN KEY(id_patogeno) REFERENCES patogeno(id_patogeno) ON DELETE NO ACTION
+);
 
-INSERT INTO [nome_popular] ([id_nome_pop],[id_especie],[nome_pop])
-VALUES
-(1, 1, 'milho'),
-(2, 2, 'feijao guandu'),
-(3, 2, 'guandu'),
-(4, 2, 'feijao de arvore'),
-(5, 3, 'crotalaria'),
-(6, 3, 'crotalaria juncea'),
-(7, 4, 'gliricidia'),
-(8, 4, 'coiote'),
-(9, 4, 'madre de cacau'),
-(10, 4, 'mata raton');
+CREATE TABLE controle_patogeno (
+  id_ctrl INTEGER PRIMARY KEY NOT NULL,
+  id_patogeno INTEGER,
+  insumo_ctrl TEXT,
+  descricao_crtl TEXT,
+  biologico INTEGER, -- bolean?
+  FOREIGN KEY(id_patogeno) REFERENCES patogeno(id_patogeno) ON DELETE NO ACTION
+);
 
-INSERT INTO [sistema] ([id_sistema],[descricao],[complexidade], [referencias], [cartilha])
-VALUES
-(1, 'Sistema consorciado de milho como cultura principal, guandu junto com milho na linha, crotalaria como cultura de entrelinha e gliricidia como planta adubadora', 'Complexidade nivel 2: 2L,1E,1A', 'Sistema Santa Brígida – Tecnologia Embrapa: Consorciação de Milho com Leguminosas, EFEITO DA Gliricidia sepium SOBRE
-NUTRIENTES DO SOLO, MICROCLIMA E
-PRODUTIVIDADE DO MILHO EM SISTEMA
-AGROFLORESTAL NO AGRESTE PARAIBANO', 'cartilha 1');
+-- manejo de cultivo
+CREATE TABLE sitema_manejo_cultivo (
+  id INTEGER PRIMARY KEY NOT NULL,
+  id_sistema INTEGER,
+  id_manejo_cultivo INTEGER,
+  epoca INTEGER,
+  FOREIGN KEY(id_sistema) REFERENCES sistema(id_sistema),
+  FOREIGN KEY(id_manejo_cultivo) REFERENCES manejo_cultivo(id)
+);
 
-INSERT INTO [sistema_especie] ([id_sistema_especie],[id_sistema],[id_especie],[funcao_planta],[espacamento_entreplantas],[espacamento_entrelinhas])
-VALUES
-(1, 1, 1, 'cultura principal', '0,2', '1,0'),
-(2, 1, 2, 'consorcio-linha', 'nd', 'nd'),
-(3, 1, 3, 'consorcio-entrelinha', 'nd', 'nd'),
-(4, 1, 4, 'consorcio-adubadora', 'nd', 'nd');
+CREATE TABLE manejo_cultivo (
+  id INTEGER PRIMARY KEY NOT NULL,
+  tipo TEXT,
+  descricao_manejo TEXT,
+  epoca INTEGER,
+  periodicidade INTEGER,
+  duracao_operacao INTEGER
+);
 
+-- manejo do solo
+CREATE TABLE sistema_manejo_solo (
+  id INTEGER PRIMARY KEY NOT NULL,
+  id_sistema INTEGER,
+  id_manejo_solo INTEGER,
+  epoca INTEGER,
+  FOREIGN KEY(id_sistema) REFERENCES sistema(id_sistema),
+  FOREIGN KEY(id_manejo_solo) REFERENCES manejo_solo(id)
+);
 
--- Exemplo de consulta
--- se retirar o comentário
--- da problema ao criar o banco na linha de comando
- -- select id_sistema, nome_cientifico, funcao_planta
-	-- from sistema
-	-- natural join sistema_especie
-	-- natural join especie_vegetal;
+CREATE TABLE manejo_solo (
+  id INTEGER PRIMARY KEY NOT NULL,
+  tipo TEXT,
+  descricao TEXT,
+  implemento TEXT,
+  insumo TEXT,
+  correcao TEXT
+);
 
+-- solos que o sistema pode ser implantado
+CREATE TABLE sistema_solo (
+  id INTEGER PRIMARY KEY NOT NULL,
+  id_sistema INTEGER,
+  id_solo INTEGER,
+  FOREIGN KEY(id_sistema) REFERENCES sistema(id_sistema),
+  FOREIGN KEY(id_solo) REFERENCES solo(id)
+);
 
--- consulta com o nome popular.
--- Pegando o primeiro resultado do nome popular
--- Outros bancos aceitam usar o first como função agregadora.
--- no SQLite é preciso buscar coluna com o menor ROWID
---
--- select id_sistema, nome_pop, nome_cientifico, funcao_planta
--- 	from sistema
--- 	natural join sistema_especie
--- 	natural join especie_vegetal
--- 	natural join nome_popular
--- 	group by id_sistema, nome_cientifico, funcao_planta
--- 	having min(nome_popular.ROWID)
+CREATE TABLE solo (
+  id INTEGER PRIMARY KEY NOT NULL,
+  tipo_solo TEXT,
+  granulometria TEXT,
+  acidez TEXT,
+  retencao_agua TEXT,
+  potencialidades TEXT,
+  deficiencias TEXT,
+  classe_zarc INTEGER
+);
+
+-- ZARC - identifica época de plantio
+-- da cultura principal do sistema
+-- Considera risco de 20%.
+-- Se município não tiver janela, vai p/ risco de 30%
+
+CREATE TABLE zarc (
+  id INTEGER PRIMARY KEY NOT NULL,
+  id_sistema INTEGER,
+  id_solo INTEGER,
+  id_municipio INTEGER,
+  inicio_plantio INTEGER,
+  fim_plantio INTEGER,
+  FOREIGN KEY(id_sistema) REFERENCES sistema(id_sistema),
+  FOREIGN KEY(id_solo) REFERENCES solo(id),
+  FOREIGN KEY(id_municipio) REFERENCES municipio(geocodigo)
+);
+
+CREATE TABLE municipio (
+  geocodigo INTEGER PRIMARY KEY NOT NULL,
+  nome TEXT,
+  uf TEXT,
+  bioma TEXT,
+  geometria TEXT -- depois vira geom
+);
