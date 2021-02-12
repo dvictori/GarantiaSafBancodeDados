@@ -81,7 +81,8 @@ Vagem (feijão de arranque) nas entrelinhas, com espaçamento de 0,3 m', 'baixa'
 (2, 'Milho, Angico, Leucena, Fava, Umbu, Amendoim e Abacaxi', 'Linha central composta por sequencia de Angico, Umbu, Leucena, Umbu, com espaçamento de 1,5 m entre árvores.
   Linhas secundárias com milho e fava intercalados, com 0,5 m de espaçamento entre plantas e distntes 0,75 m da linha central.
   Bordaduras com 3 linhas contínuas de Amendoim, Abacaxi e Amendoim. Espaçamento entre plantas e entre linhas de 0,5 m',
-'alta', 'SAF CNPC Documentos 130', 'cartilha 2');
+'alta', 'SAF CNPC Documentos 130', 'cartilha 2'),
+(3, 'Fava solteira', 'Cultivo de fava para o NE', 'baixa', 'doc XXX', 'cartilha ZZZ');
 
 INSERT INTO sistema_especie (id_sistema_especie, id_sistema, id_especie, posicao_especie,
   espacamento_entreplantas, espacamento_entrelinhas)
@@ -95,8 +96,8 @@ VALUES
 (7, 2, 13, 'linha 1', 6, 3),
 (8, 2, 20, 'linha 1', 3, 3),
 (9, 2, 15, 'bordadura', 0.5, 0.5),
-(10, 2, 16, 'bordadura', 0.5, NULL);
-
+(10, 2, 16, 'bordadura', 0.5, NULL),
+(11, 3, 8, 'linha', NULL, NULL);
 
 -- Praga - formiga cortadeira - estou inventando
 INSERT INTO praga

@@ -47,3 +47,9 @@ select id_sistema, nome
   natural join praga
   natural join praga_pop
   where praga_pop = 'Saúva'
+
+-- Quantas espécies em cada sistema
+select id_sistema, nome, count(id_especie) as n_especies
+from sistema
+natural join sistema_especie
+group by id_sistema, nome
