@@ -1,6 +1,7 @@
 -- tabela dos sistemas
 CREATE TABLE sistema (
   id_sistema INTEGER PRIMARY KEY NOT NULL,
+  nome TEXT,
   descricao TEXT,
   complexidade TEXT,
   referencias TEXT,
@@ -20,9 +21,9 @@ CREATE TABLE sistema_especie (
   id_sistema_especie INTEGER PRIMARY KEY NOT NULL,
   id_sistema INTEGER,
   id_especie INTEGER,
-  funcao_especie TEXT,
-  espacamento_entreplantas TEXT,
-  espacamento_entrelinhas TEXT,
+  posicao_especie TEXT,
+  espacamento_entreplantas REAL,
+  espacamento_entrelinhas REAL,
   FOREIGN KEY("id_especie") REFERENCES "especie_vegetal"("id_especie") ON DELETE NO ACTION,
   FOREIGN KEY("id_sistema") REFERENCES "sistema"("id_sistema") ON DELETE NO ACTION
 );
@@ -31,8 +32,9 @@ CREATE TABLE especie_vegetal (
   id_especie INTEGER PRIMARY KEY NOT NULL,
   nome_cientifico TEXT,
   estrato TEXT,
-  exigencia_fert TEXT,
-  ciclo TEXT,
+  resiliencia INTEGER,
+  ciclo_min INTEGER,
+  ciclo_max INTEGER,
   alimento_humano TEXT,
   medicinal TEXT,
   bioma_caract TEXT

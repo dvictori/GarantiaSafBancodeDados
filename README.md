@@ -11,3 +11,6 @@ O banco de dados em si não é versionado e está listado detro do `.gitignore`
 Para iniciar o banco na linha de comando, podemos usar o comando:
 
 `sqlite3 bd_garantia_safra.sqlite < Banco_dados/cria_banco_praticas_GS.sql`
+
+Para inserir os dados, usamos o comando:
+`sqlite3 bd_garantia_safra.sqlite < Banco_dados/insere_dados_ficticios.sql`
