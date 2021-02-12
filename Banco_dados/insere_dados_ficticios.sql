@@ -96,3 +96,19 @@ VALUES
 (8, 2, 20, 'linha 1', 3, 3),
 (9, 2, 15, 'bordadura', 0.5, 0.5),
 (10, 2, 16, 'bordadura', 0.5, NULL);
+
+
+-- Praga - formiga cortadeira - estou inventando
+INSERT INTO praga
+VALUES
+(1, 'Atta sp', 'Formiga cortadeira', 'Folhas cortadas', NULL);
+
+INSERT INTO praga_pop
+VALUES
+(1, 1, 'Formiga cortadeira'),
+(2, 1, 'Saúva'),
+(3, 1, 'Formiga');
+
+INSERT INTO praga_especie
+VALUES
+(1, 1, 13);

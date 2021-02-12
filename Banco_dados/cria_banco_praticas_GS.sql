@@ -47,15 +47,13 @@ CREATE TABLE nome_popular (
   FOREIGN KEY(id_especie) REFERENCES especie_vegetal(id_especie) ON DELETE NO ACTION
 );
 
--- pragas que atacam as especies
+-- pragas que atacam as especies vegetais
 CREATE TABLE praga (
   id_praga INTEGER PRIMARY KEY NOT NULL,
-  id_planta INTEGER,
   praga_cientifico TEXT,
   descricao_praga TEXT,
   descricao_sintoma TEXT,
-  foto TEXT, -- será que não é possível ter só uma tabela de midia
-  FOREIGN KEY(id_planta) REFERENCES especie_vegetal
+  foto TEXT -- será que não é possível ter só uma tabela de midia
 );
 
 CREATE TABLE praga_pop (
@@ -63,6 +61,14 @@ CREATE TABLE praga_pop (
   id_praga INTEGER,
   praga_pop TEXT,
   FOREIGN KEY(id_praga) REFERENCES praga(id_praga) ON DELETE NO ACTION
+);
+
+CREATE TABLE praga_especie (
+  id INTEGER PRIMARY KEY NOT NULL,
+  id_praga INTEGER,
+  id_especie INTEGER,
+  FOREIGN KEY (id_praga) REFERENCES praga(id_praga),
+  FOREIGN KEY (id_especie) REFERENCES especie_vegetal(id_especie)
 );
 
 CREATE TABLE controle_praga (
