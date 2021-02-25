@@ -3,8 +3,8 @@
 -- Exemplo de consulta
 -- se retirar o comentário
 -- da problema ao criar o banco na linha de comando
-listar espécies (nome científico) de todos os sistemas
- select id_sistema, nome_cientifico, posicao_especie
+--listar espécies (nome científico) de todos os sistemas
+select id_sistema, nome_cientifico, posicao_especie
 	from sistema
 	natural join sistema_especie
 	natural join especie_vegetal;
@@ -30,7 +30,8 @@ select id_sistema, nome
 	natural join nome_popular
 	where nome_pop = 'umbu'
 
--- busca sistema por nome popular de espécia - usando nome popular alternativo
+-- busca sistema por nome popular de espécia
+-- usando nome popular alternativo
 select id_sistema, nome
  	from sistema
 	natural join sistema_especie
